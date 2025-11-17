@@ -10,6 +10,3 @@
 
 #include "../../gameGlobal.h"
 
-void gameGame_run(GameState *g){
-    printf("game loops!");
-}

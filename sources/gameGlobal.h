@@ -14,9 +14,10 @@ typedef struct{
   bool is_running;
 }GameState;
 
-extern int WINDOW_WIDTH; 
-extern int WINDOW_HEIGHT; 
-extern char WINDOW_TITLE;
+#define SDL_FLAGS SDL_INIT_VIDEO
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 600
+#define WINDOW_TITLE "skibidi"
 
 #endif
 

@@ -9,7 +9,3 @@
 #include <stdlib.h> // for malloc(), free()
 
 #include "../../gameGlobal.h"
-
-void gameGame_run(GameState *g){
-    printf("game loops!");
-}
