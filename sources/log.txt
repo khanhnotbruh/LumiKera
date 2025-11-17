@@ -1,0 +1,209 @@
+t hoi chat gpt cho structure nhe:)
+
+
+---
+
+# **Proposed directory structure**
+
+```
+LumiKera/
+├── src/
+│   ├── main.c
+│   ├── engine/
+│   │   ├── sdl_core.c / sdl_core.h
+│   │   ├── renderer.c / renderer.h
+│   │   ├── input.c / input.h
+│   │   └── camera.c / camera.h
+│   └── game/
+│       ├── game.c / game.h
+│       ├── player.c / player.h
+│       └── world.c / world.h
+├── assets/
+│   ├── images/
+│   └── maps/
+└── globals.c / globals.h
+```
+
+---
+
+# **Function mapping to files**
+
+### **1️⃣ engine/sdl_core.c / sdl_core.h**
+
+**Purpose:** Initialize and clean up SDL, TTF, window, renderer, and global resources.
+
+| Function           | Location     | Description                                      |
+| ------------------ | ------------ | ------------------------------------------------ |
+| `sdl_init()`       | `sdl_core.c` | Initialize SDL, TTF, window, renderer            |
+| `sdl_load_media()` | `sdl_core.c` | Load textures like background, icon, etc.        |
+| `sdl_cleanup()`    | `sdl_core.c` | Destroy window, renderer, textures, quit SDL/TTF |
+
+---
+
+### **2️⃣ engine/renderer.c / renderer.h**
+
+**Purpose:** Drawing / rendering functions.
+
+| Function                                        | Location     | Description                        |
+| ----------------------------------------------- | ------------ | ---------------------------------- |
+| `renderer_clear()`                              | `renderer.c` | Clear the screen                   |
+| `renderer_present()`                            | `renderer.c` | Swap buffers / present the frame   |
+| `draw_texture(SDL_Texture *tex, SDL_Rect *dst)` | `renderer.c` | Draw a texture at a given position |
+
+---
+
+### **3️⃣ engine/input.c / input.h**
+
+**Purpose:** Handle user input events (keyboard, mouse, etc.)
+
+| Function                         | Location  | Description                                |
+| -------------------------------- | --------- | ------------------------------------------ |
+| `input_process(SDL_Event event)` | `input.c` | Handle key presses / releases, quit events |
+
+---
+
+### **4️⃣ engine/camera.c / camera.h**
+
+**Purpose:** Camera movement, following player, screen scrolling.
+
+| Function          | Location   | Description                            |
+| ----------------- | ---------- | -------------------------------------- |
+| `camera_init()`   | `camera.c` | Initialize camera position, viewport   |
+| `camera_update()` | `camera.c` | Update camera based on player position |
+
+---
+
+### **5️⃣ game/player.c / player.h**
+
+**Purpose:** Player-specific logic (movement, state, rendering)
+
+| Function           | Location   | Description                             |
+| ------------------ | ---------- | --------------------------------------- |
+| `player_init()`    | `player.c` | Initialize player struct and variables  |
+| `player_update()`  | `player.c` | Update player position, physics, inputs |
+| `player_render()`  | `player.c` | Render player sprite                    |
+| `player_cleanup()` | `player.c` | Free player resources                   |
+
+---
+
+### **6️⃣ game/world.c / world.h**
+
+**Purpose:** World/map logic, tile rendering, environment
+
+| Function                       | Location  | Description          |
+| ------------------------------ | --------- | -------------------- |
+| `world_load(const char *path)` | `world.c` | Load a map from file |
+| `world_render()`               | `world.c` | Render the map/world |
+| `world_cleanup()`              | `world.c` | Free world resources |
+
+---
+
+### **7️⃣ game/game.c / game.h**
+
+**Purpose:** High-level game loop orchestrating everything
+
+| Function     | Location | Description                             |
+| ------------ | -------- | --------------------------------------- |
+| `game_run()` | `game.c` | Main game loop: input → update → render |
+
+---
+
+### **8️⃣ globals.c / globals.h**
+
+**Purpose:** Central storage for global variables (window, renderer, camera, player, world, etc.)
+
+| Variable                  | Location    | Description             |
+| ------------------------- | ----------- | ----------------------- |
+| `SDL_Window *gWindow`     | `globals.c` | Global window pointer   |
+| `SDL_Renderer *gRenderer` | `globals.c` | Global renderer         |
+| `Player gPlayer`          | `globals.c` | Global player struct    |
+| `World gWorld`            | `globals.c` | Global world/map struct |
+| `Camera gCamera`          | `globals.c` | Global camera struct    |
+| `bool gIsRunning`         | `globals.c` | Game running flag       |
+
+---
+
+### **9️⃣ main.c**
+
+**Purpose:** Program entry point; calls init, runs game loop, cleans up.
+
+| Function | Location | Description                                                                        |
+| -------- | -------- | ---------------------------------------------------------------------------------- |
+| `main()` | `main.c` | Calls `sdl_init`, `player_init`, `world_load`, then `game_run`, then `sdl_cleanup` |
+
+---
+
+# **✅ Summary of flow**
+
+1. **main.c** → sets up engine + globals + game → calls `game_run()`
+2. **game_run()** → main loop: `input_process()` → `player_update()` / `world_render()` → `renderer_present()`
+3. **engine/** → handles low-level stuff like SDL init, rendering, input, camera
+4. **game/** → handles player, world, and high-level game logic
+5. **globals** → shared variables across modules
+
+---
+
+If you want, I can **draw a diagram showing arrows between modules** (`main` → `game` → `engine` → `globals`) to make the dependencies totally visual — it’s extremely handy when your team starts working together.
+
+Do you want me to make that diagram?
+
+
+Yes! Here’s a visual way to think about your LumiKera project structure and how the functions/modules interact:
+
+```
+                 ┌────────────┐
+                 │   main.c   │
+                 │  (entry)   │
+                 └─────┬──────┘
+                       │
+                       ▼
+                 ┌────────────┐
+                 │  game/game │
+                 │  game_run()│
+                 └─────┬──────┘
+                       │
+       ┌───────────────┼───────────────┐
+       ▼                               ▼
+┌────────────┐                   ┌─────────────┐
+│ game/player│                   │ game/world  │
+│ init/update│                   │ load/render │
+└────────────┘                   └─────────────┘
+       │                               │
+       ▼                               ▼
+┌────────────┐                   ┌─────────────┐
+│engine/input│                   │engine/camera│
+│ process()  │                   │ update()    │
+└────────────┘                   └─────────────┘
+       │
+       ▼
+┌────────────┐
+│engine/renderer│
+│ draw/clear    │
+└──────────────┘
+       ▲
+       │
+┌────────────┐
+│ globals.c  │
+│ shared vars│
+└────────────┘
+```
+
+**Legend / flow:**
+
+* `main.c` → sets up everything and calls `game_run()`.
+* `game/game.c` → orchestrates the main loop: input → update → render.
+* `game/player.c` & `game/world.c` → update entities and map.
+* `engine/` → low-level operations: input handling, rendering, camera movement.
+* `globals.c` → stores shared variables like `SDL_Window*`, `SDL_Renderer*`, `Player`, `World`, `Camera`.
+
+**Key points:**
+
+* `engine/` should not know game-specific logic.
+* `game/` uses engine functions.
+* `globals.c/h` can be included anywhere to avoid passing lots of variables around.
+* Arrows show **who calls what**.
+
+This diagram is very handy for new team members to understand **module responsibilities and dependencies**.
+
+If you want, I can make an **even cleaner version showing all function names in the boxes** so you can literally see where `player_update()`, `world_render()`, etc., live. Do you want me to do that?
+
