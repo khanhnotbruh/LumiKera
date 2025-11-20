@@ -3,7 +3,7 @@
 
 #include "SDL/gameSDL.h"
 #include "camera/gameCamera.h"
-#include "input/gameInput.h"
+#include "event/gameEvent.h"
 #include "render/gameRender.h"
 
 #endif
